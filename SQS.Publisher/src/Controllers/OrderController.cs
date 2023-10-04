@@ -33,7 +33,7 @@ namespace SQS.Publisher.Controllers
         public  async Task<ActionResult> CreateOrder([FromBody] OrderData order)
         {
             var data = _mapper.Map<Orders>(order);
-            var result =  await _service.CreateOrders(data);
+            var _ =  await _service.CreateOrders(data);
             return Created("Created", new { Message = "Order Created Successfully" });
         }
 
@@ -53,6 +53,26 @@ namespace SQS.Publisher.Controllers
             var result =  _service.GetOrders();
 
             return Ok(result);
+        }
+
+
+        [HttpPut()]
+        public ActionResult<Orders> UpdateOrder([FromBody] OrderData order)
+        {
+            var data = _mapper.Map<Orders>(order);
+
+            var _ = _service.UpdateOrders(data);
+
+            return Ok(new { Message = "Order Updated Successfully" });
+        }
+
+
+        [HttpDelete]
+        public ActionResult<Orders> DeleteOrder([FromBody] Guid id)
+        {
+            var _ = _service.DeleteOrders(id);
+
+            return Ok(new { Message = "Order Deleted Successfully"});
         }
     }
 }

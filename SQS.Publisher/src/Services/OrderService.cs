@@ -56,6 +56,11 @@ namespace SQS.Publisher.Services
 
              _context.Orders.Remove(exisitingOrder);
             var value = await _context.SaveChangesAsync();
+
+            var message = new OrderDeleted { Id = id, publishedDate = DateTime.Now.ToLongDateString() };
+
+            if (value == 1) await _sqsMessager.SendMessageAsync(message);
+
             return value;
         }
 
@@ -82,6 +87,10 @@ namespace SQS.Publisher.Services
             {
                 _context.Update(order);
                 var value = await _context.SaveChangesAsync();
+
+                var message = new OrderUpdated { Id = order.Id, publishedDate = DateTime.Now.ToLongDateString() };
+
+                if (value == 1) await _sqsMessager.SendMessageAsync(message);
 
                 return value;
             }
