@@ -34,7 +34,7 @@ namespace SQS.Publisher.Controllers
         {
             var data = _mapper.Map<Orders>(order);
             var result =  await _service.CreateOrders(data);
-            return Created("Created", result);
+            return Created("Created", new { Message = "Order Created Successfully" });
         }
 
 
