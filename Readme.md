@@ -6,7 +6,7 @@ What is AWS SQS Service? SQS is a serverless AWS service that can be used to sen
 
 
 
- ## Architecture Flow
+ ## Architecture Flow With Redrive Policy
 
 ![image info](./Img/flow.png)
 
@@ -18,9 +18,17 @@ What is AWS SQS Service? SQS is a serverless AWS service that can be used to sen
      - Event type which describe the nature of the message
      - published Data - time the message was published.
   
- - Every actions or api request made to SQS would be captured by Cloud Trail in form of events and these events would be then further sent to an Amazone S3 Bucket.
- - Both .net applications would be running seperate docker containers, which would then be deployed on AWS Fargate. I choose AWS Fargate over AWS ECS because I really don't want to be creating and managing compute resources.
+- Every actions or api request made to SQS would be captured by Cloud Trail in form of events and these events would be then further sent to an Amazone S3 Bucket.
+- Both .net applications would be running seperate docker containers, which would then be deployed on AWS Fargate. I choose AWS Fargate over AWS ECS because I really don't want to be creating and managing compute resources.
 
 
 
+## Redrive Policy
+
+- Both .net applications would be running seperate docker containers, which would then be deployed on AWS Fargate. I choose AWS Fargate over AWS ECS because I really don't want to be creating and managing compute resources.
+
+## References
+
+1. https://www.youtube.com/watch?v=es4Bu6H7_zE
+2. https://aws.amazon.com/what-is/dead-letter-queue/#:~:text=A%20dead%2Dletter%20queue%20(DLQ)%20is%20a%20special%20type,cannot%20process%20due%20to%20errors.
 
