@@ -26,16 +26,16 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var urlResponse = await _sqsClient.GetQueueUrlAsync(_queueSettings.Value.Name, stoppingToken);
+        var url = await GetSQSQueueUrl();
 
-        var messgageRequest = GetMessageRequest(urlResponse);
+        var messgageRequest = GetMessageRequest(url);
 
 
         while (!stoppingToken.IsCancellationRequested)
         {
             _logger.LogInformation("fetching messages from sqs...");
             var response = await _sqsClient.ReceiveMessageAsync(messgageRequest, stoppingToken);
-           
+         
             foreach (var message in response.Messages)
             {
                 var messageHandler = GetMessageHandlers(message);
@@ -54,15 +54,15 @@ public class Worker : BackgroundService
                         _logger.LogError(ex, "message failed during processing");
                         continue;
                     }
-                   
+
                 }
 
                 _logger.LogInformation("Deleting SQS messageing...");
                 //delete SQS Message
-              await _sqsClient.DeleteMessageAsync(urlResponse.QueueUrl, message.ReceiptHandle, stoppingToken);
+                await _sqsClient.DeleteMessageAsync(url, message.ReceiptHandle, stoppingToken);
             }
 
-       
+
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             await Task.Delay(10000, stoppingToken);
         }
@@ -86,11 +86,11 @@ public class Worker : BackgroundService
 
 
     //get message request
-    private ReceiveMessageRequest GetMessageRequest(GetQueueUrlResponse url)
+    private ReceiveMessageRequest GetMessageRequest(string url)
     {
         var receiveMessageRequest = new ReceiveMessageRequest
         {
-            QueueUrl = url.QueueUrl,
+            QueueUrl = url,
             AttributeNames = new List<string> { "All" },
             MessageAttributeNames = new List<string> { "All" },
             MaxNumberOfMessages = 1
